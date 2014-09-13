@@ -120,7 +120,7 @@ function isKeyword(word) {
 }
 
 function getData(foodItem) {
-	console.log("getData: " + apiCall(url(foodItem));
+	console.log("getData: " + apiCall(url(foodItem)));
 	return apiCall(url(foodItem));
 }
 
