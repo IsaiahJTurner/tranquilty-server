@@ -91,7 +91,7 @@ app.get('/meal', function(req, res) {
 
 app.get('/data', function(req, res) {
 	var id = req.param("id")
-	Meal.find({ id: id }, function(err, meal) {
+	Meal.findOne({ id: id }, function(err, meal) {
 	  if (err) return console.error(err);
 	  console.dir(meal);
 	  res.send(meal);
