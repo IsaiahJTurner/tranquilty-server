@@ -13,11 +13,19 @@ var app = express();
 app.use(bodyParser.json());
 app.set('view engine', 'jade')
 var usersSchema = mongoose.Schema({
-  	phone: String,
   	id: String
 })
-
 var User = mongoose.model('user', usersSchema);
+var mealSchema = mongoose.Schema({
+  	id: String,
+  	date: String,
+  	food: String,
+  	group: String,
+  	specs: String
+})
+var Meal = mongoose.model('meal', mealSchema);
+var salt = crypto.randomBytes(128).toString('base64');
+
 
 app.get('/', function(req, res) {
   res.render('index', { title: 'Express' });
@@ -28,7 +36,7 @@ app.get('/login', function(req, res) {
   var newPhone = req.param("phone")
   var newUser = req.param("user")
   if (typeof newPhone != 'undefined') {
-  	var salt = crypto.randomBytes(128).toString('base64');
+  	
     var hash = crypto.createHmac('sha1', salt).update(newPhone).digest('hex')
   	var url = "tr://" + hash
   	console.log("login from " + newPhone + " hash: " + hash);
@@ -52,15 +60,22 @@ app.get('/login', function(req, res) {
 });
 
 app.get('/meal', function(req, res) {
+	var phone = req.param("phone")
+	var hash = crypto.createHmac('sha1', salt).update(newPhone).digest('hex')
 	var meal = req.param("Body")
-	console.log(req.param("Body"))
-	var parsed = parse(meal)
+	console.log(hash)
+	var cal = parse(meal)
 	console.log(parsed)
 	// console.log("isjson " + req.is('json'))
 	// console.log("req " + req)
 	// console.log(req.body)
 	// console.log(req.body.Body)
-	var datetime = new Date()
+	var date = new Date()
+	var meal = new Meal({id: hash, date: date, food: foodItem, group: 'empty', specs: cal});
+	console.log(meal)
+	meal.save(function (err, user) {
+		  if (err) return console.error(err);
+	});
 	console.log(datetime)
 	res.send('a')
 });
