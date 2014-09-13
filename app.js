@@ -76,7 +76,7 @@ app.get('/meal', function(req, res) {
 	meal.save(function (err, user) {
 		  if (err) return console.error(err);
 	});
-	console.log(datetime)
+	console.log(date)
 	res.send('a')
 });
 
