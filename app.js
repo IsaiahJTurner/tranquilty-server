@@ -51,11 +51,12 @@ app.get('/login', function(req, res) {
   }
 });
 
-app.post('/meal', function(req, res) {
-	console.log("isjson " + req.is('json'))
-	console.log("req " + req)
-	console.log(req.body)
-	console.log(req.body.Body)
+app.get('/meal', function(req, res) {
+	console.log(req.params())
+	// console.log("isjson " + req.is('json'))
+	// console.log("req " + req)
+	// console.log(req.body)
+	// console.log(req.body.Body)
 	var message = req.body.param("Body")
 	console.log(message)
 	var datetime = new Date()
