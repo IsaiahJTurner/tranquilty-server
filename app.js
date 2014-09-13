@@ -1,7 +1,6 @@
 var express = require('express');
 var crypto = require('crypto');
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://psamora:test@kahana.mongohq.com:10026/app29528023');
+
 var bodyParser = require('body-parser');
 var router = express.Router();
 var accountSid = 'ACd882ca7c1db91ca067d5072ac3f0a5b8';
@@ -12,18 +11,28 @@ var client = require('twilio')(accountSid, authToken);
 var app = express();
 app.use(bodyParser.json());
 app.set('view engine', 'jade')
+
+/*
+ * Mongoose and mongo connections
+ */
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://psamora:test@kahana.mongohq.com:10026/app29528023');
+var db = mongoose.connection;
+db.on('error', console.error);
 var usersSchema = mongoose.Schema({
-  	id: String
-})
-var User = mongoose.model('user', usersSchema);
+  		id: String
+	})
 var mealSchema = mongoose.Schema({
-  	id: String,
-  	date: String,
-  	food: String,
-  	group: String,
-  	specs: String
-})
+	  	id: String,
+	  	date: String,
+	  	food: String,
+	  	group: String,
+	  	specs: String
+	})
+var User = mongoose.model('user', usersSchema);
 var Meal = mongoose.model('meal', mealSchema);
+
+
 var salt = crypto.randomBytes(128).toString('base64');
 
 
@@ -60,24 +69,22 @@ app.get('/login', function(req, res) {
 });
 
 app.get('/meal', function(req, res) {
+	console.log("----------Meal incoming-----------")
 	var phone = req.param("From")
-	var hash = crypto.createHmac('sha1', salt).update(phone).digest('hex')
-	var meal = req.param("Body")
-	console.log(hash)
-	var cal = parse(meal)
-	console.log("cal " + cal)
-	// console.log("isjson " + req.is('json'))
-	// console.log("req " + req)
-	// console.log(req.body)
-	// console.log(req.body.Body)
+	var id = crypto.createHmac('sha1', salt).update(phone).digest('hex')
+	var sms = req.param("Body")
 	var date = new Date()
-	var meal = new Meal({id: hash, date: date, food: foodItem, group: 'empty', specs: cal});
-	console.log(meal)
-	meal.save(function (err, user) {
-		  if (err) return console.error(err);
+	parse(sms, id, date)
+	res.send('')
+});
+
+app.get('/data', function(req, res) {
+	var id = req.param("id")
+	Meal.find({ id: id }, function(err, thor) {
+	  if (err) return console.error(err);
+	  console.dir(thor);
+	  console.log(thor);
 	});
-	console.log(date)
-	res.send('a')
 });
 
 app.listen(process.env.PORT || 7002);
@@ -94,47 +101,48 @@ var keywords = "ate had drank and with an a";
 var sms = "tell tranquility I ate a pizza for breakfast";
 var foodItem = "";
 
-function parse(sms) {
+function parse(sms, id, date) {
+		console.log(sms)
+		console.log(id)
+		console.log(date)
 		var returnMe;
 		var message = sms.split(" ");
 		for (i = 0; i < message.length; i++) {
 				if (isKeyword(message[i])) {
 						if (isKeyword(message[i+1])) {
 								foodItem = message[i+2];
-								returnMe = getData(foodItem);
+								getData(foodItem, id, date);
 								if (isKeyword(message[i+3])) {
 										foodItem = message[i+4];
-										returnMe = getData(foodItem);
+										getData(foodItem, id, date);
 								}
 								break;
 						}
 						foodItem = message[i+1];
-						returnMe = getData(foodItem);
+						getData(foodItem, id, date);
 				}
 		}
-		return returnMe;
 }
 
 function isKeyword(word) {
 	return keywords.indexOf(word) > -1;
 }
 
-function getData(foodItem) {
-	console.log("getData: " + apiCall(url(foodItem)));
-	return apiCall(url(foodItem));
+function getData(foodItem, id, date) {
+	apiCall(url(foodItem), foodItem, id, date);
 }
 
-var title = "";
-function apiCall(url) {
-		
+function apiCall(url, foodItem, id, date) {
 		needle.get(url, function(error, response) {
 		  	if (!error && response.statusCode == 200)
 		  			var response = response.body;
-		  	title = response['hits'][0]['fields']['nf_calories'];
-		  	console.log("test: " + title);
+		  	specs = response['hits'][0]['fields']['nf_calories'];
+		  	var meal = new Meal({id: id, date: date, food: foodItem, group: 'empty', specs: specs});
+				console.log(meal)
+				meal.save(function (err, user) {
+					  if (err) return console.error(err);
+				});
 		});
-		console.log("apiCall: " + title);
-		return title;
 }
 
 function url(foodItem) {
