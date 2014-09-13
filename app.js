@@ -45,12 +45,15 @@ app.get('/login', function(req, res) {
   console.log(client)
   var salt = crypto.randomBytes(128).toString('base64');
   var newPhone = req.param("phone")
+  newPhone = '+' + newPhone.substr(1,newPhone.length);
+  console.log(newPhone)
   var user = req.param("user")
   if (typeof newPhone != 'undefined') {
     var hash = crypto.createHmac('sha1', salt).update(newPhone).digest('hex')
   	var url = "tr://" + hash
   	console.log("login from " + newPhone + " hash: " + hash);
   	var user = new User({phone: newPhone, id: hash, confirmed: false});
+  	console.log(newPhone)
   	User.update({phone: newPhone}, {phone: newPhone, id: hash}, {upsert: true}, function (err, user) {
 		if (err) return console.error(err);
 	})
@@ -76,8 +79,12 @@ app.get('/meal', function(req, res) {
 	console.log(phone)
 	var sms = req.param("Body")
 	var date = new Date()
-	parse(sms, phone.id, date)
-	res.send('OK')
+	User.find({phone: phone}, function(err, phone) {
+		if (err) return console.error(err);
+		parse(sms, phone.id, date)
+		res.send('OK')
+	}
+	
 });
 
 app.get('/data', function(req, res) {
