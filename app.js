@@ -7,13 +7,17 @@ var router = express.Router();
 
 var app = express();
 app.use(bodyParser.json());
-
+app.set('view engine', 'jade')
 var usersSchema = mongoose.Schema({
   	phone: String,
   	id: String
 })
 
 var User = mongoose.model('user', usersSchema);
+
+app.get('/', function(req, res) {
+  res.render('index', { title: 'Express' });
+});
 
 app.get('/login', function(req, res) {
   var key = Math.ceil(parseInt(req.param("phone")) / 9999);
