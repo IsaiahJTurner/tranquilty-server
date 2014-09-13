@@ -33,15 +33,11 @@ var mealSchema = mongoose.Schema({
 var User = mongoose.model('user', usersSchema);
 var Meal = mongoose.model('meal', mealSchema);
 
-
-
-
-
 app.get('/', function(req, res) {
   res.render('index', { title: 'Express' });
 });
 
-app.get('/login', function(req, res) {
+app.post('/login', function(req, res) {
   console.log(client)
   var salt = crypto.randomBytes(128).toString('base64');
   var newPhone = req.param("phone")
