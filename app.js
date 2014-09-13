@@ -112,6 +112,7 @@ function parse(sms) {
 						returnMe = getData(foodItem);
 				}
 		}
+		return returnMe;
 }
 
 function isKeyword(word) {
