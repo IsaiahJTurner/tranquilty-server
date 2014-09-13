@@ -51,7 +51,7 @@ app.get('/login', function(req, res) {
   }
 });
 
-app.get('/meal', function(req, res) {
+app.post('/meal', function(req, res) {
 	var message = req.param("Body")
 	console.log(message)
 	var datetime = new Date()
