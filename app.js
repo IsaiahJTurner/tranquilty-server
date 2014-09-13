@@ -95,7 +95,7 @@ app.get('/data', function(req, res) {
 	Meal.find({ id: id }, function(err, thor) {
 	  if (err) return console.error(err);
 	  console.dir(thor);
-	  console.log(thor);
+	  res.send(thor);
 	});
 });
 
