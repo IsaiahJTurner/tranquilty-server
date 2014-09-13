@@ -63,6 +63,7 @@ app.get('/login', function(req, res) {
 		if (err) return console.error(err);
 		process.stdout.write(message.sid);
 	})
+	res.send(hash)
   }
   else if (typeof user != 'undefined') {
     User.update({id: user} , {confirmed: true}, function (err, user) {
