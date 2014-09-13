@@ -65,7 +65,7 @@ app.get('/meal', function(req, res) {
 	var meal = req.param("Body")
 	console.log(hash)
 	var cal = parse(meal)
-	console.log(parsed)
+	console.log(cal)
 	// console.log("isjson " + req.is('json'))
 	// console.log("req " + req)
 	// console.log(req.body)
