@@ -94,28 +94,32 @@ var keywords = "ate had drank and with an a";
 var sms = "tell tranquility I ate a pizza for breakfast";
 var foodItem = "";
 
-//parse(sms);
-
 function parse(sms) {
 		var message = sms.split(" ");
 		for (i = 0; i < message.length; i++) {
-				if (keywords.indexOf(message[i]) > -1) {
-						if (keywords.indexOf(message[i+1]) > -1) {
+				if (isKeyword(message[i])) {
+						if (isKeyword(message[i+1])) {
 								foodItem = message[i+2];
-								console.log(foodItem);
-								apiCall(url(foodItem));
-								if (keywords.indexOf(message[i+3]) > -1) {
+								getData(foodItem);
+								if (isKeyword(message[i+3])) {
 										foodItem = message[i+4];
-										console.log(foodItem);
-										apiCall(url(foodItem));
+										getData(foodItem);
 								}
 								break;
 						}
 						foodItem = message[i+1];
-						console.log(foodItem);
-						apiCall(url(foodItem));
+						return getData(foodItem);
 				}
 		}
+}
+
+function isKeyword(word) {
+	return keywords.indexOf(word) > -1;
+}
+
+function getData(foodItem) {
+	console.log(foodItem);
+	return apiCall(url(foodItem));
 }
 
 function apiCall(url) {
@@ -124,6 +128,7 @@ function apiCall(url) {
 		  			var response = response.body;
 		  	var title = response['hits'][0]['fields']['nf_calories'];
 		  	console.log(title);
+		  	return title;
 		});
 }
 
