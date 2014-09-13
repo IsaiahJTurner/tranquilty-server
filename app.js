@@ -120,18 +120,19 @@ function isKeyword(word) {
 }
 
 function getData(foodItem) {
-	console.log(apiCall(url(foodItem));
+	console.log("getData: " + apiCall(url(foodItem));
 	return apiCall(url(foodItem));
 }
 
 function apiCall(url) {
-		var title;
+		var title = "";
 		needle.get(url, function(error, response) {
 		  	if (!error && response.statusCode == 200)
 		  			var response = response.body;
 		  	title = response['hits'][0]['fields']['nf_calories'];
 		  	console.log(title);
 		});
+		console.log("apiCall: " + title);
 		return title;
 }
 
