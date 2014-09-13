@@ -62,11 +62,11 @@ app.get('/login', function(req, res) {
 		if (err) return console.error(err);
 		process.stdout.write(message.sid);
 	})
-	res.send('OK')
+	res.json({success: true})
   }
   else {
   	console.log("invalid login page access");
-  	res.send('FAIL');
+  	res.json({success: false})
   }
 });
 
@@ -82,11 +82,12 @@ app.get('/meal', function(req, res) {
 
 app.get('/data', function(req, res) {
 	var id = req.param("id")
-	Meal.find({ id: id }, function(err, thor) {
+	Meal.find({ id: id }, function(err, meal) {
 	  if (err) return console.error(err);
-	  console.dir(thor);
-	  res.send(thor);
+	  console.dir(meal);
+	  res.send(meal);
 	});
+	res.json({success: false})
 });
 
 app.listen(process.env.PORT || 7002);
