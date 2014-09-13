@@ -57,7 +57,7 @@ app.post('/meal', function(req, res) {
 	var datetime = new Date()
 	console.log(datetime)
 	res.send('a')
-})
+});
 
 app.listen(process.env.PORT || 7002);
 
