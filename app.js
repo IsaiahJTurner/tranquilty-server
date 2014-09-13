@@ -123,13 +123,14 @@ function getData(foodItem) {
 }
 
 function apiCall(url) {
+		var title;
 		needle.get(url, function(error, response) {
 		  	if (!error && response.statusCode == 200)
 		  			var response = response.body;
-		  	var title = response['hits'][0]['fields']['nf_calories'];
+		  	title = response['hits'][0]['fields']['nf_calories'];
 		  	console.log(title);
-		  	return title;
 		});
+		return title;
 }
 
 function url(foodItem) {
