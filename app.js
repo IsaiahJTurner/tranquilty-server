@@ -81,6 +81,8 @@ app.get('/meal', function(req, res) {
 	var date = new Date()
 	User.find({phone: phone}, function(err, phone) {
 		if (err) return console.error(err);
+		console.log(phone);
+		console.log(phone.id);
 		parse(sms, phone.id, date)
 		res.send('OK')
 	});
