@@ -95,21 +95,21 @@ var sms = "tell tranquility I ate a pizza for breakfast";
 var foodItem = "";
 
 function parse(sms) {
+		var returnMe;
 		var message = sms.split(" ");
 		for (i = 0; i < message.length; i++) {
 				if (isKeyword(message[i])) {
 						if (isKeyword(message[i+1])) {
 								foodItem = message[i+2];
-								getData(foodItem);
+								returnMe = getData(foodItem);
 								if (isKeyword(message[i+3])) {
 										foodItem = message[i+4];
-										getData(foodItem);
+										returnMe = getData(foodItem);
 								}
 								break;
 						}
 						foodItem = message[i+1];
-						console.log("getting: " + getData(foodItem));
-						return getData(foodItem);
+						returnMe = getData(foodItem);
 				}
 		}
 }
