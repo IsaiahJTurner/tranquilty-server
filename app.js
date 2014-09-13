@@ -83,7 +83,7 @@ app.get('/meal', function(req, res) {
 		if (err) return console.error(err);
 		parse(sms, phone.id, date)
 		res.send('OK')
-	}
+	});
 	
 });
 
