@@ -124,8 +124,9 @@ function getData(foodItem) {
 	return apiCall(url(foodItem));
 }
 
+var title = "";
 function apiCall(url) {
-		var title = "";
+		
 		needle.get(url, function(error, response) {
 		  	if (!error && response.statusCode == 200)
 		  			var response = response.body;
