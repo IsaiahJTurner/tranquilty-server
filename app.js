@@ -46,7 +46,7 @@ app.get('/login', function(req, res) {
   var user = req.param("user")
   if (typeof newPhone != 'undefined') {
     var hash = crypto.createHmac('sha1', salt).update(newPhone).digest('hex')
-  	var url = "tr://" + hash
+  	var url = "tranquility://" + hash
   	console.log("login from " + newPhone + " hash: " + hash);
   	var user = new User({phone: newPhone, id: hash, confirmed: false});
   	console.log(newPhone)
