@@ -92,11 +92,14 @@ app.get('/meal', function(req, res) {
 app.get('/data', function(req, res) {
 	var id = req.param("id")
 	Meal.find({ id: id }, function(err, meal) {
-	  if (err) return console.error(err);
+	  if (err) {
+	  	res.json({success: false})
+	  	return console.error(err);
+	  }
 	  console.dir(meal);
 	  res.send(meal);
 	});
-	res.json({success: false})
+	
 });
 //
 app.listen(process.env.PORT || 7002);
