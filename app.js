@@ -131,7 +131,7 @@ function apiCall(url) {
 		  	if (!error && response.statusCode == 200)
 		  			var response = response.body;
 		  	title = response['hits'][0]['fields']['nf_calories'];
-		  	console.log(title);
+		  	console.log("test: " + title);
 		});
 		console.log("apiCall: " + title);
 		return title;
