@@ -108,6 +108,7 @@ function parse(sms) {
 								break;
 						}
 						foodItem = message[i+1];
+						console.log("getting: " + getData(foodItem));
 						return getData(foodItem);
 				}
 		}
