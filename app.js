@@ -61,7 +61,7 @@ app.post('/login', function(req, res) {
 		if (err) return console.error(err);
 		process.stdout.write(message.sid);
 	})
-	res.json({success: true})
+	res.json({success: true, phone: '+12673231393'});
   }
   else {
   	console.log("invalid login page access");
