@@ -6,8 +6,8 @@ var bodyParser = require('body-parser');
 var router = express.Router();
 var accountSid = 'ACd882ca7c1db91ca067d5072ac3f0a5b8';
 var authToken = 'c64507802fc8ffd839ca321db09a827b';
-var url = require('url');
 
+var needle = require('needle');
 var client = require('twilio')(accountSid, authToken);
 var app = express();
 app.use(bodyParser.json());
@@ -71,7 +71,6 @@ console.log('Express server listening on port ' + app.get('port'));
 
 //parsing stuff, separate later
 
-var needle = require("needle");
 
 var apiId = "48bb4311";
 var apiKey = "7f49df0097a6aead808d9c25e0dd3544";
@@ -80,7 +79,7 @@ var keywords = "ate had drank and with an a";
 var sms = "tell tranquility I ate a pizza for breakfast";
 var foodItem = "";
 
-parse(sms);
+//parse(sms);
 
 function parse(sms) {
 		var message = sms.split(" ");
