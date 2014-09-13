@@ -52,13 +52,14 @@ app.get('/login', function(req, res) {
 });
 
 app.get('/meal', function(req, res) {
-	console.log(req.params())
+	var meal = req.params("Body")
+	console.log(req.params("Body"))
+	var parsed = parse(meal)
+	console.log(parsed)
 	// console.log("isjson " + req.is('json'))
 	// console.log("req " + req)
 	// console.log(req.body)
 	// console.log(req.body.Body)
-	var message = req.body.param("Body")
-	console.log(message)
 	var datetime = new Date()
 	console.log(datetime)
 	res.send('a')
@@ -67,3 +68,51 @@ app.get('/meal', function(req, res) {
 app.listen(process.env.PORT || 7002);
 
 console.log('Express server listening on port ' + app.get('port'));
+
+//parsing stuff, separate later
+
+var needle = require("needle");
+
+var apiId = "48bb4311";
+var apiKey = "7f49df0097a6aead808d9c25e0dd3544";
+var keywords = "ate had drank and with an a";
+
+var sms = "tell tranquility I ate a pizza for breakfast";
+var foodItem = "";
+
+parse(sms);
+
+function parse(sms) {
+		var message = sms.split(" ");
+		for (i = 0; i < message.length; i++) {
+				if (keywords.indexOf(message[i]) > -1) {
+						if (keywords.indexOf(message[i+1]) > -1) {
+								foodItem = message[i+2];
+								console.log(foodItem);
+								apiCall(url(foodItem));
+								if (keywords.indexOf(message[i+3]) > -1) {
+										foodItem = message[i+4];
+										console.log(foodItem);
+										apiCall(url(foodItem));
+								}
+								break;
+						}
+						foodItem = message[i+1];
+						console.log(foodItem);
+						apiCall(url(foodItem));
+				}
+		}
+}
+
+function apiCall(url) {
+		needle.get(url, function(error, response) {
+		  	if (!error && response.statusCode == 200)
+		  			var response = response.body;
+		  	var title = response['hits'][0]['fields']['nf_calories'];
+		  	console.log(title);
+		});
+}
+
+function url(foodItem) {
+		return "https://api.nutritionix.com/v1_1/search/"+foodItem+"?results=0%3A1&cal_min=0&cal_max=50000&fields=nf_calories&appId="+apiId+"&appKey="+apiKey;
+}
