@@ -21,8 +21,7 @@ var db = mongoose.connection;
 db.on('error', console.error);
 var usersSchema = mongoose.Schema({
 		phone: String,
-  		id: String,
-  		confirmed: Boolean
+  		id: String
 	})
 var mealSchema = mongoose.Schema({
 	  	id: String,
@@ -52,7 +51,7 @@ app.get('/login', function(req, res) {
   	var url = "tr://" + hash
   	console.log("login from " + newPhone + " hash: " + hash);
   	var user = new User({phone: newPhone, id: hash, confirmed: false});
-  	User.update({phone: newPhone}, {phone: newPhone, id: hash, confirmed: false}, {upsert: true}, function (err, user) {
+  	User.update({phone: newPhone}, {phone: newPhone, id: hash}, {upsert: true}, function (err, user) {
 		if (err) return console.error(err);
 	})
 	client.messages.create({
@@ -63,17 +62,11 @@ app.get('/login', function(req, res) {
 		if (err) return console.error(err);
 		process.stdout.write(message.sid);
 	})
-	res.send(hash)
-  }
-  else if (typeof user != 'undefined') {
-    User.update({id: user} , {confirmed: true}, function (err, user) {
-		  if (err) return console.error(err);
-		  console.log(user + ' login successful')
-		  res.send('login successful')
-	});
+	res.send('OK')
   }
   else {
   	console.log("invalid login page access");
+  	res.send('FAIL');
   }
 });
 
@@ -83,12 +76,8 @@ app.get('/meal', function(req, res) {
 	console.log(phone)
 	var sms = req.param("Body")
 	var date = new Date()
-	User.findOne({phone: phone}, function(err, phone) {
-	  if (err) return console.error(err);
-	  if (!phone.confirmed) return console.error("user not confirmed");
-	  parse(sms, phone.id, date)
-	});
-	res.send('')
+	parse(sms, phone.id, date)
+	res.send('OK')
 });
 
 app.get('/data', function(req, res) {
@@ -115,10 +104,6 @@ var sms = "tell tranquility I ate a pizza for breakfast";
 var foodItem = "";
 
 function parse(sms, id, date) {
-		console.log(sms)
-		console.log(id)
-		console.log(date)
-		var returnMe;
 		var message = sms.split(" ");
 		for (i = 0; i < message.length; i++) {
 				if (isKeyword(message[i])) {
