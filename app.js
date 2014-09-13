@@ -54,6 +54,7 @@ app.get('/login', function(req, res) {
 app.post('/meal', function(req, res) {
 	console.log("isjson " + req.is('json'))
 	console.log("req " + req)
+	console.log(req.body)
 	console.log(req.body.Body)
 	var message = req.body.param("Body")
 	console.log(message)
