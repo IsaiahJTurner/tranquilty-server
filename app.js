@@ -1,7 +1,7 @@
 var express = require('express');
 var crypto = require('crypto');
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://psamora:Shannahm3!@kahana.mongohq.com:10026/app29525528');
+mongoose.connect('mongodb://psamora:test@kahana.mongohq.com:10026/app29528023');
 var bodyParser = require('body-parser');
 var router = express.Router();
 
@@ -47,4 +47,4 @@ app.get('/confirm', function(req, res) {
 
 app.listen(process.env.PORT || 7002);
 
- console.log('Express server listening on port ' + app.get('port'));
+console.log('Express server listening on port ' + app.get('port'));
