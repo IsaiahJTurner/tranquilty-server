@@ -20,7 +20,9 @@ mongoose.connect('mongodb://psamora:test@kahana.mongohq.com:10026/app29528023');
 var db = mongoose.connection;
 db.on('error', console.error);
 var usersSchema = mongoose.Schema({
-  		id: String
+		phone: String,
+  		id: String,
+  		confirmed: Boolean
 	})
 var mealSchema = mongoose.Schema({
 	  	id: String,
@@ -33,7 +35,7 @@ var User = mongoose.model('user', usersSchema);
 var Meal = mongoose.model('meal', mealSchema);
 
 
-var salt = crypto.randomBytes(128).toString('base64');
+
 
 
 app.get('/', function(req, res) {
@@ -41,26 +43,32 @@ app.get('/', function(req, res) {
 });
 
 app.get('/login', function(req, res) {
-
+  console.log(client)
+  var salt = crypto.randomBytes(128).toString('base64');
   var newPhone = req.param("phone")
-  var newUser = req.param("user")
+  var user = req.param("user")
   if (typeof newPhone != 'undefined') {
-  	
     var hash = crypto.createHmac('sha1', salt).update(newPhone).digest('hex')
   	var url = "tr://" + hash
   	console.log("login from " + newPhone + " hash: " + hash);
-	// client.messages.create({
-	// 	body: "Hey, thanks for using Tranquility! Click to confirm your login: " + url,
-	// 	to: newPhone,
-	// 	from: "+12673231393"
-	// 	}, function(err, message) {
-	// 	process.stdout.write(message.sid);
-	// })
+  	var user = new User({phone: newPhone, id: hash, confirmed: false});
+  	User.update({phone: newPhone}, {phone: newPhone, id: hash, confirmed: false}, {upsert: true}, function (err, user) {
+		if (err) return console.error(err);
+	})
+	client.messages.create({
+		body: "Hey, thanks for using Tranquility! To confirm your login, access: " + url,
+		to: newPhone,
+		from: "+12673231393"
+		}, function(err, message) {
+		if (err) return console.error(err);
+		process.stdout.write(message.sid);
+	})
   }
-  else if (typeof newUser != 'undefined') {
-    var user = new User({id: hash});
-    user.save(function (err, user) {
+  else if (typeof user != 'undefined') {
+    User.update({id: user} , {confirmed: true}, function (err, user) {
 		  if (err) return console.error(err);
+		  console.log(user + ' login successful')
+		  res.send('login successful')
 	});
   }
   else {
@@ -71,10 +79,14 @@ app.get('/login', function(req, res) {
 app.get('/meal', function(req, res) {
 	console.log("----------Meal incoming-----------")
 	var phone = req.param("From")
-	var id = crypto.createHmac('sha1', salt).update(phone).digest('hex')
+	console.log(phone)
 	var sms = req.param("Body")
 	var date = new Date()
-	parse(sms, id, date)
+	User.findOne({phone: phone}, function(err, phone) {
+	  if (err) return console.error(err);
+	  if (!phone.confirmed) return console.error("user not confirmed");
+	  parse(sms, phone.id, date)
+	});
 	res.send('')
 });
 
