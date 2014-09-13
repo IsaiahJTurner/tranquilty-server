@@ -60,7 +60,7 @@ app.get('/login', function(req, res) {
 });
 
 app.get('/meal', function(req, res) {
-	var phone = req.param("phone")
+	var phone = req.param("From")
 	var hash = crypto.createHmac('sha1', salt).update(phone).digest('hex')
 	var meal = req.param("Body")
 	console.log(hash)
