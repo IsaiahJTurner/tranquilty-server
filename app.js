@@ -52,8 +52,8 @@ app.get('/login', function(req, res) {
 });
 
 app.get('/meal', function(req, res) {
-	var meal = req.params("Body")
-	console.log(req.params("Body"))
+	var meal = req.param("Body")
+	console.log(req.param("Body"))
 	var parsed = parse(meal)
 	console.log(parsed)
 	// console.log("isjson " + req.is('json'))
