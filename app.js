@@ -79,7 +79,7 @@ app.get('/meal', function(req, res) {
 	console.log(phone)
 	var sms = req.param("Body")
 	var date = new Date()
-	User.find({phone: phone}, function(err, phone) {
+	User.findOne({phone: phone}, function(err, phone) {
 		if (err) return console.error(err);
 		console.log(phone);
 		console.log(phone.id);
@@ -91,7 +91,7 @@ app.get('/meal', function(req, res) {
 
 app.get('/data', function(req, res) {
 	var id = req.param("id")
-	Meal.findOne({ id: id }, function(err, meal) {
+	Meal.find({ id: id }, function(err, meal) {
 	  if (err) return console.error(err);
 	  console.dir(meal);
 	  res.send(meal);
