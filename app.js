@@ -52,7 +52,11 @@ app.get('/login', function(req, res) {
 });
 
 app.get('/meal', function(req, res) {
-	console.log(req.query)
+	var message = req.param("Body")
+	console.log(message)
+	var datetime = new Date()
+	console.log(datetime)
+	res.send('a')
 })
 
 app.listen(process.env.PORT || 7002);
