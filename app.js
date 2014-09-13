@@ -52,8 +52,8 @@ app.get('/login', function(req, res) {
 });
 
 app.post('/meal', function(req, res) {
-	console.log(req.body)
-	var message = req.param("Body")
+	console.log(req.body.Body)
+	var message = req.body.param("Body")
 	console.log(message)
 	var datetime = new Date()
 	console.log(datetime)
