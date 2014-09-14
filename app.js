@@ -26,7 +26,7 @@ var usersSchema = mongoose.Schema({
 	})
 var mealSchema = mongoose.Schema({
 	  	id: String,
-	  	date: String,
+	  	date: Date,
 	  	food: String,
 	  	group: String,
 	  	specs: Object,
@@ -82,11 +82,11 @@ app.get('/login', function(req, res) {
 });
 
 app.get('/meal', function(req, res) {
-	console.log("----------Meal incoming-----------")
-	var phone = req.param("From")
-	console.log(phone)
-	var sms = req.param("Body")
-	var date = new Date()
+	console.log("----------Meal incoming-----------");
+	var phone = req.param("From");
+	console.log(phone);
+	var sms = req.param("Body");
+	var date = Date.now();
 	User.findOne({phone: phone}, function(err, phone) {
 		if (err) return console.error(err);
 		console.log(phone);
