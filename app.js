@@ -202,7 +202,7 @@ function callback2(error, response, body) {
         // console.log(name + " " + id + " " + calories + " " + carbs + " " + sugar + " " + fiber + " " + fat + " " + protein);
         
         for (i = 0; i < icons.length; i++) {
-            if (icons[i] == ) icon = icons[i];
+            if (icons[i] == name) icon = icons[i];
         }
 
 
