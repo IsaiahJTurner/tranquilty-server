@@ -175,7 +175,7 @@ function urlId(id) {
 
 function callback2(error, response, body) {
     if (!error && response.statusCode == 200) {
-
+    	var innerName = name;
         var info = JSON.parse(body);
         console.log("INFO2: " + info);
         // category = info['nutritional_facts'][0]['nutrient']['common_name'];
@@ -204,13 +204,13 @@ function callback2(error, response, body) {
         // console.log(name + " " + id + " " + calories + " " + carbs + " " + sugar + " " + fiber + " " + fat + " " + protein);
         
         for (i = 0; i < icons.length; i++) {
-            if (icons[i] == name) icon = icons[i];
+            if (icons[i] == innerName) icon = icons[i];
         }
 
 
         var specs = {
             "food" : {
-                "name" : name,
+                "name" : innerName,
                 "id" : id,
                 "calories" : calories,
                 "icon" : icon
@@ -224,7 +224,7 @@ function callback2(error, response, body) {
             }
         };
         console.log(info)
-        var meal = new Meal({id: hashDB, date: dateDB, food: name, specs: specs});
+        var meal = new Meal({id: hashDB, date: dateDB, food: innerName, specs: specs});
 		console.log(meal)
 		console.log(specs)
 		meal.save(function (err, user) {
