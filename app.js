@@ -107,27 +107,20 @@ console.log('Express server listening on port ' + app.get('port'));
 
 var apiId = "48bb4311";
 var apiKey = "7f49df0097a6aead808d9c25e0dd3544";
-var keywords = "ate had drank and with an a";
-
-var sms = "tell tranquility I ate a pizza for breakfast";
+var ignore = "ate had drank and with I i an a for lunch dinner breakfast at in on";
 var foodItem = "";
 
 function parse(sms, id, date) {
 		var message = sms.split(" ");
 		for (i = 0; i < message.length; i++) {
-				if (isKeyword(message[i])) {
-						if (isKeyword(message[i+1])) {
-								foodItem = message[i+2];
-								getData(foodItem, id, date);
-								if (isKeyword(message[i+3])) {
-										foodItem = message[i+4];
-										getData(foodItem, id, date);
-								}
-								break;
-						}
-						foodItem = message[i+1];
-						getData(foodItem, id, date);
-				}
+			if(!isKeyword(message[i]))
+				request({
+						hash: id,
+						date: date,
+					    url: urlFood(name),
+					    headers: {
+					        'X-Access-Token': 'at7ppmp352pkxjvgcrwb6wxk'
+					    }}, callback)
 		}
 }
 
@@ -135,23 +128,112 @@ function isKeyword(word) {
 	return keywords.indexOf(word) > -1;
 }
 
-function getData(foodItem, id, date) {
-	apiCall(url(foodItem), foodItem, id, date);
+//Food api file from Paul from here on, separate later
+
+var name = "taco";
+var id = "";
+var category = "";
+var type = "";
+
+var carbs = "0";
+var sugar = "0";
+var fiber = "0";
+var fat = "0";
+var protein = "0";
+var calories = "0"
+var icon = "";
+
+var icons = ["pizza", "cheeseburger", "burger", "fries", "coke", "soda", "sushi", "pasta", "taco", "burrito", "quesadilla", "cheesesteak", "hoagie", "sandwich", "salad", "soup"];
+
+function urlFood(name) {
+    return "https://api.foodcare.me/dishes/list/facts?q="+name+"&page=1&per_page=1";
 }
 
-function apiCall(url, foodItem, id, date) {
-		needle.get(url, function(error, response) {
-		  	if (!error && response.statusCode == 200)
-		  			var response = response.body;
-		  	specs = response['hits'][0]['fields']['nf_calories'];
-		  	var meal = new Meal({id: id, date: date, food: foodItem, group: 'empty', specs: specs});
-				console.log(meal)
-				meal.save(function (err, user) {
-					  if (err) return console.error(err);
-				});
+var options = {
+    url: urlFood(name),
+      hash: '',
+    date: '',
+    headers: {
+        'X-Access-Token': 'at7ppmp352pkxjvgcrwb6wxk'
+    }
+};
+
+function callback(error, response, body) {
+    if (!error && response.statusCode == 200) {
+        var info = JSON.parse(body);
+        id = info['edibles'][0]['id'];
+        console.log(id);
+        // type = info['edibles'][0]['description'];
+        options2.url = urlId(id);
+        request({
+			    url: urlId(id),
+			    hash: body.hash,
+			    date: body.date,
+			    headers: {
+			        'X-Access-Token': 'at7ppmp352pkxjvgcrwb6wxk'
+			    }}, callback2);
+    }
+}
+
+function urlId(id) {
+    return "http://api.foodcare.me/dishes/show/"+id+"/facts";
+}
+
+function callback2(error, response, body) {
+    if (!error && response.statusCode == 200) {
+
+        var info = JSON.parse(body);
+        // category = info['nutritional_facts'][0]['nutrient']['common_name'];
+        nutritional_facts = info['nutritional_facts'];
+        for (i = 0; i < nutritional_facts.length; i++) {
+            if (info['nutritional_facts'][i]['nutrient']['common_name'] == "Calories") {
+                calories = info['nutritional_facts'][i]['nutritional_value'];
+            }
+            if (info['nutritional_facts'][i]['nutrient']['common_name'] == "Carbohydrate") {
+                carbs = info['nutritional_facts'][i]['daily_value_rounded'];
+            }
+            if (info['nutritional_facts'][i]['nutrient']['common_name'] == "Sugar") {
+                sugar = info['nutritional_facts'][i]['daily_value_rounded'];
+            }
+            if (info['nutritional_facts'][i]['nutrient']['common_name'] == "Fiber") {
+                fiber = info['nutritional_facts'][i]['daily_value_rounded'];
+            }
+            if (info['nutritional_facts'][i]['nutrient']['common_name'] == "Total Fat") {
+                fat = info['nutritional_facts'][i]['daily_value_rounded'];
+            }
+            if (info['nutritional_facts'][i]['nutrient']['common_name'] == "Protein") {
+                protein = info['nutritional_facts'][i]['daily_value_rounded'];
+            }
+        }
+        // type = info['nutritional_facts'][0]['nutritional_value'];
+        // console.log(name + " " + id + " " + calories + " " + carbs + " " + sugar + " " + fiber + " " + fat + " " + protein);
+        
+        for (i = 0; i < icons.length; i++) {
+            if (icons[i] == name) icon = icons[i];
+        }
+
+
+        var specs = {
+            "food" : {
+                "name" : name,
+                "id" : id,
+                "calories" : calories,
+                "icon" : icon
+            },
+            "chart" : {
+                "carbs": carbs,
+                "sugar": sugar,
+                "fiber": fiber,
+                "fat": fat,
+                "protein": protein
+            }
+        };
+
+        var meal = new Meal({id: info.hash, date: info.date, food: name, specs: specs});
+		console.log(meal)
+		meal.save(function (err, user) {
+				if (err) return console.error(err);
 		});
-}
-
-function url(foodItem) {
-		return "https://api.nutritionix.com/v1_1/search/"+foodItem+"?results=0%3A1&cal_min=0&cal_max=50000&fields=nf_calories&appId="+apiId+"&appKey="+apiKey;
+        console.log(dataJSON);
+    }
 }
