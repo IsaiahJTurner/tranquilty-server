@@ -230,9 +230,9 @@ function callback2(error, response, body) {
 
         var meal = new Meal({id: info.hash, date: info.date, food: name, specs: specs});
 		console.log(meal)
+		console.log(specs)
 		meal.save(function (err, user) {
 				if (err) return console.error(err);
 		});
-        console.log(dataJSON);
     }
 }
