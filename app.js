@@ -79,7 +79,7 @@ app.get('/meal', function(req, res) {
 		if (err) return console.error(err);
 		console.log(phone);
 		console.log("ID1: " + phone.id);
-		parse(sms, phone.id, date)
+		parse(sms, phone.phone, date)
 		res.json({success: true})
 	});
 	
