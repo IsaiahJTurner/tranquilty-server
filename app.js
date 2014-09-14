@@ -239,7 +239,7 @@ var protein = "0";
 var calories = "0";
 
 
-var icons = ["Pizza", "Taco", "Fries", "Assorted Sushi", "Cupcake", "Egg", "Chicken", "Cheeseburgers", "Soda", "Steak", "Fish"];
+var icons = ["Pizza", "Taco", "Fries", "Assorted Sushi", "Cupcake", "Egg", "Chicken", "Cheeseburger", "Soda", "Steak", "Fish"];
 
 function urlFood(name) {
     return "https://api.foodcare.me/dishes/list/facts?q="+name+"&page=1&per_page=1";
