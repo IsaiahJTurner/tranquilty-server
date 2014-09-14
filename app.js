@@ -78,7 +78,7 @@ app.get('/meal', function(req, res) {
 	User.findOne({phone: phone}, function(err, phone) {
 		if (err) return console.error(err);
 		console.log(phone);
-		console.log(phone.id);
+		console.log("ID1: " + phone.id);
 		parse(sms, phone.id, date)
 		res.send('OK')
 	});
@@ -112,9 +112,10 @@ var foodItem = "";
 
 function parse(sms, id, date) {
 		var message = sms.split(" ");
-		console.log(id)
-		console.log(date)
 		for (i = 0; i < message.length; i++) {
+			hashDB = id;
+			dateDB = date;
+			name = message[i];
 			if(!isKeyword(message[i]))
 				request({
 						hash: id,
@@ -132,6 +133,8 @@ function isKeyword(word) {
 }
 
 //Food api file from Paul from here on, separate later
+var hashDB = "";
+var dateDB = ""
 var name = "";
 var id = "";
 var category = "";
@@ -155,8 +158,6 @@ function callback(error, response, body) {
     if (!error && response.statusCode == 200) {
         var info = JSON.parse(body);
         id = info['edibles'][0]['id'];
-        console.log(info);
-        name = info.name;
         // type = info['edibles'][0]['description'];
         request({
 			    url: urlId(id),
@@ -176,6 +177,7 @@ function callback2(error, response, body) {
     if (!error && response.statusCode == 200) {
 
         var info = JSON.parse(body);
+        console.log("INFO2: " + info);
         // category = info['nutritional_facts'][0]['nutrient']['common_name'];
         nutritional_facts = info['nutritional_facts'];
         for (i = 0; i < nutritional_facts.length; i++) {
@@ -222,7 +224,7 @@ function callback2(error, response, body) {
             }
         };
         console.log(info)
-        var meal = new Meal({id: info.hash, date: info.date, food: name, specs: specs});
+        var meal = new Meal({id: hashDB, date: dateDB, food: name, specs: specs});
 		console.log(meal)
 		console.log(specs)
 		meal.save(function (err, user) {
