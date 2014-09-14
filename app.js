@@ -204,9 +204,10 @@ function callback2(error, response, body) {
         // type = info['nutritional_facts'][0]['nutritional_value'];
         // console.log(name + " " + id + " " + calories + " " + carbs + " " + sugar + " " + fiber + " " + fat + " " + protein);
         
-
-        if (icons.indexOf(innerName) != -1)
-        	icon = icons.indexOf(innerName);
+        console.log(icons.indexOf(innerName))
+        var index = icons.indexOf(innerName)
+        if (index != -1)
+        	icon = icons[index];
 
         var specs = {
             "food" : {
