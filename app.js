@@ -80,7 +80,7 @@ app.get('/meal', function(req, res) {
 		console.log(phone);
 		console.log("ID1: " + phone.id);
 		parse(sms, phone.id, date)
-		res.send('OK')
+		res.json({success: true})
 	});
 	
 });
@@ -206,7 +206,7 @@ function callback2(error, response, body) {
         
 
         if (icons.indexOf(innerName) != -1)
-        	icon = icons[i];
+        	icon = icons.indexOf(innerName);
 
         var specs = {
             "food" : {
