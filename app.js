@@ -112,12 +112,14 @@ var foodItem = "";
 
 function parse(sms, id, date) {
 		var message = sms.split(" ");
+		console.log(id)
+		console.log(date)
 		for (i = 0; i < message.length; i++) {
 			if(!isKeyword(message[i]))
 				request({
 						hash: id,
 						date: date,
-					    url: urlFood(name),
+					    url: urlFood(message[i]),
 					    headers: {
 					        'X-Access-Token': 'at7ppmp352pkxjvgcrwb6wxk'
 					    }}, callback)
@@ -129,8 +131,7 @@ function isKeyword(word) {
 }
 
 //Food api file from Paul from here on, separate later
-
-var name = "taco";
+\
 var id = "";
 var category = "";
 var type = "";
@@ -148,15 +149,6 @@ var icons = ["pizza", "cheeseburger", "burger", "fries", "coke", "soda", "sushi"
 function urlFood(name) {
     return "https://api.foodcare.me/dishes/list/facts?q="+name+"&page=1&per_page=1";
 }
-
-var options = {
-    url: urlFood(name),
-      hash: '',
-    date: '',
-    headers: {
-        'X-Access-Token': 'at7ppmp352pkxjvgcrwb6wxk'
-    }
-};
 
 function callback(error, response, body) {
     if (!error && response.statusCode == 200) {
