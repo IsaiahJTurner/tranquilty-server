@@ -146,7 +146,7 @@ var fiber = "0";
 var fat = "0";
 var protein = "0";
 var calories = "0"
-var icon = "";
+
 
 var icons = ["pizza", "cheeseburger", "burger", "fries", "coke", "soda", "sushi", "pasta", "taco", "burrito", "quesadilla", "cheesesteak", "hoagie", "sandwich", "salad", "soup"];
 
@@ -177,6 +177,7 @@ function callback2(error, response, body) {
     if (!error && response.statusCode == 200) {
     	var innerName = name;
         var info = JSON.parse(body);
+        var icon = "";
         console.log("INFO2: " + info);
         // category = info['nutritional_facts'][0]['nutrient']['common_name'];
         nutritional_facts = info['nutritional_facts'];
@@ -203,10 +204,9 @@ function callback2(error, response, body) {
         // type = info['nutritional_facts'][0]['nutritional_value'];
         // console.log(name + " " + id + " " + calories + " " + carbs + " " + sugar + " " + fiber + " " + fat + " " + protein);
         
-        for (i = 0; i < icons.length; i++) {
-            if (icons[i] == innerName) icon = icons[i];
-        }
 
+        if (icons.indexOf(innerName) != -1)
+        	icon = icons[i];
 
         var specs = {
             "food" : {
