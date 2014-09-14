@@ -162,12 +162,12 @@ function callback(error, response, body) {
     if (!error && response.statusCode == 200) {
         var info = JSON.parse(body);
         id = info['edibles'][0]['id'];
-        console.log(id);
+        console.log(info);
         // type = info['edibles'][0]['description'];
         request({
 			    url: urlId(id),
-			    hash: body.hash,
-			    date: body.date,
+			    hash: info.hash,
+			    date: info.date,
 			    headers: {
 			        'X-Access-Token': 'at7ppmp352pkxjvgcrwb6wxk'
 			    }}, callback2);
