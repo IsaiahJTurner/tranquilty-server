@@ -119,6 +119,7 @@ function parse(sms, id, date) {
 				request({
 						hash: id,
 						date: date,
+						name: message[i],
 					    url: urlFood(message[i]),
 					    headers: {
 					        'X-Access-Token': 'at7ppmp352pkxjvgcrwb6wxk'
@@ -131,7 +132,7 @@ function isKeyword(word) {
 }
 
 //Food api file from Paul from here on, separate later
-
+var name = "";
 var id = "";
 var category = "";
 var type = "";
@@ -155,6 +156,7 @@ function callback(error, response, body) {
         var info = JSON.parse(body);
         id = info['edibles'][0]['id'];
         console.log(info);
+        name = info.name;
         // type = info['edibles'][0]['description'];
         request({
 			    url: urlId(id),
@@ -200,7 +202,7 @@ function callback2(error, response, body) {
         // console.log(name + " " + id + " " + calories + " " + carbs + " " + sugar + " " + fiber + " " + fat + " " + protein);
         
         for (i = 0; i < icons.length; i++) {
-            if (icons[i] == name) icon = icons[i];
+            if (icons[i] == ) icon = icons[i];
         }
 
 
