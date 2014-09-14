@@ -237,10 +237,10 @@ var sugar = "0";
 var fiber = "0";
 var fat = "0";
 var protein = "0";
-var calories = "0"
+var calories = "0";
 
 
-var icons = ["pizza", "cheeseburger", "burger", "fries", "coke", "soda", "sushi", "pasta", "taco", "burrito", "quesadilla", "cheesesteak", "hoagie", "sandwich", "salad", "soup"];
+var icons = ["Pizza", "Taco", "Fries", "Assorted Sushi", "Cupcake", "Egg", "Chicken", "Cheeseburgers", "Soda", "Steak", "Fish"];
 
 function urlFood(name) {
     return "https://api.foodcare.me/dishes/list/facts?q="+name+"&page=1&per_page=1";
@@ -249,6 +249,9 @@ function urlFood(name) {
 function callback(error, response, body) {
     if (!error && response.statusCode == 200) {
         var info = JSON.parse(body);
+        console.log("INFO!!!!!! " + info);
+        if (info['edibles'].length == 0)
+        	return;
         id = info['edibles'][0]['id'];
         // type = info['edibles'][0]['description'];
         request({
@@ -280,28 +283,37 @@ function callback2(error, response, body) {
             if (info['nutritional_facts'][i]['nutrient']['common_name'] == "Carbohydrate") {
                 carbs = info['nutritional_facts'][i]['daily_value_rounded'];
                 if (carbs == null) carbs = 0;
+                else carbs = parseInt(carbs.substr(0,carbs.length));
             }
             if (info['nutritional_facts'][i]['nutrient']['common_name'] == "Sugar") {
                 sugar = info['nutritional_facts'][i]['daily_value_rounded'];
                 if (sugar == null) sugar = 0;
+                else sugar = parseInt(sugar.substr(0,sugar.length));
             }
             if (info['nutritional_facts'][i]['nutrient']['common_name'] == "Fiber") {
                 fiber = info['nutritional_facts'][i]['daily_value_rounded'];
                 if (fiber == null) fiber = 0;
+                else fiber = parseInt(fiber.substr(0,fiber.length));
             }
             if (info['nutritional_facts'][i]['nutrient']['common_name'] == "Total Fat") {
                 fat = info['nutritional_facts'][i]['daily_value_rounded'];
                 if (fat == null) fat = 0;
+                else fat = parseInt(fat.substr(0,fat.length));
             }
             if (info['nutritional_facts'][i]['nutrient']['common_name'] == "Protein") {
                 protein = info['nutritional_facts'][i]['daily_value_rounded'];
+                if (protein == null) fat = 0;
+                else protein = parseInt(protein.substr(0,protein.length));
             }
         }
         var innerName = info['name'];
         // type = info['nutritional_facts'][0]['nutritional_value'];
         // console.log(name + " " + id + " " + calories + " " + carbs + " " + sugar + " " + fiber + " " + fat + " " + protein);
-        
-        console.log(icons.indexOf(innerName))
+        console.log(innerName);
+        if (innerName == "Steakburger") innerName = "Steak";
+        if (innerName == "Diet Soda") innerName = "Soda";
+        if (innerName == "Bean Soup") innerName = "Soup";
+        console.log("icon!!!!!!!!!!!!!!" + icons.indexOf(innerName))
         var index = icons.indexOf(innerName)
         if (index != -1)
         	icon = icons[index];
