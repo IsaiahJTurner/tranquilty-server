@@ -56,9 +56,15 @@ app.get('/login', function(req, res) {
   	console.log("login from " + newPhone + " hash: " + hash);
   	var user = new User({phone: newPhone, id: hash, confirmed: false});
   	console.log(newPhone)
-  	User.update({phone: newPhone}, {phone: newPhone, id: hash}, {upsert: true}, function (err, user) {
-		if (err) return console.error(err);
-	})
+
+  	var newUser = new User({phone: newPhone, id: hash});
+
+  	newUser.save(function (err, user) {
+				if (err) return console.error(err);
+	});
+ //  	User.update({phone: newPhone}, {phone: newPhone, id: hash}, {upsert: true}, function (err, user) {
+	// 	if (err) return console.error(err);
+	// })
 	client.messages.create({
 		body: "Hey, thanks for using Tranquility! To confirm your login, access: " + url,
 		to: newPhone,
@@ -106,64 +112,63 @@ function addPercent (n1, n2) {
 		return parseInt(first) + parseInt(second);
 }
 
+var querryPhone = "";
 app.get('/data', function(req, res) {
-	var id = req.param("id")
-	Meal.find({ id: id }, function(err, meals) {
+	var hash = req.param("id")
+	User.findOne({ id: hash }, function(err, user) {
 		if (err) {
 		  	res.json({success: false})
 		  	return console.error(err);
 		}
-		var totalCarbs = 0;
-		var totalSugar = 0;
-		var totalFiber = 0;
-		var totalFat = 0;
-		var totalProtein = 0;
-		var foods = [];
-		console.log(totalSugar)
-		//var obj = JSON.parse(meal);
-		_.each(meals, function(item) {
-			foods.push(item.specs);
-			if (item.carbs != "0" && item.carbs != null)
-				totalCarbs += parseInt(item.carbs.substr(0,item.carbs.length - 1))
-			if (item.sugar != "0" && item.sugar != null)
-				totalSugar += parseInt(item.sugar.substr(0,item.sugar.length - 1))
+		querryPhone = user.phone;
+		Meal.find({ id: querryPhone }, function(err, meals) {
+			if (err) {
+			  	res.json({success: false})
+			  	return console.error(err);
+			}
+			var totalCarbs = 0;
+			var totalSugar = 0;
+			var totalFiber = 0;
+			var totalFat = 0;
+			var totalProtein = 0;
+			var foods = [];
 			console.log(totalSugar)
-			if (item.fiber != "0" && item.fiber != null)
-				totalFiber += parseInt(item.fiber.substr(0,item.fiber.length - 1))
-			if (item.fat != "0" && item.fat != null)
-				totalFat += parseInt(item.fat.substr(0,item.fat.length - 1))
-			if (item.protein != "0" && item.protein != null)
-				totalProtein += parseInt(item.protein.substr(0,item.protein.length - 1))
-		})
-			//foods[j]
-		console.log(foods);
-		console.log(totalCarbs);
-		console.log(totalSugar);
-		console.log(totalFiber);
-		console.log(totalFat);
-		console.log(totalProtein);
-			
+			//var obj = JSON.parse(meal);
+			_.each(meals, function(item) {
+				foods.push(item.specs);
+				if (item.carbs != "0" && item.carbs != null)
+					totalCarbs += parseInt(item.carbs.substr(0,item.carbs.length - 1))
+				if (item.sugar != "0" && item.sugar != null)
+					totalSugar += parseInt(item.sugar.substr(0,item.sugar.length - 1))
+				console.log(totalSugar)
+				if (item.fiber != "0" && item.fiber != null)
+					totalFiber += parseInt(item.fiber.substr(0,item.fiber.length - 1))
+				if (item.fat != "0" && item.fat != null)
+					totalFat += parseInt(item.fat.substr(0,item.fat.length - 1))
+				if (item.protein != "0" && item.protein != null)
+					totalProtein += parseInt(item.protein.substr(0,item.protein.length - 1))
+			})
+				//foods[j]
+			console.log(foods);
+			console.log(totalCarbs);
+			console.log(totalSugar);
+			console.log(totalFiber);
+			console.log(totalFat);
+			console.log(totalProtein);
 
-		var specs = {
-	        "meals" : foods,
-	        "chart" : {
-	            "carbs": totalCarbs,
-	            "sugar": totalSugar,
-	            "fiber": totalFiber,
-	            "fat": totalFat,
-	            "protein": totalProtein
-	        }
-	     };
-	     res.send(specs);
-	  //console.dir(meal);
-	  
-
-
+			var specs = {
+		        "meals" : foods,
+		        "chart" : {
+		            "carbs": totalCarbs,
+		            "sugar": totalSugar,
+		            "fiber": totalFiber,
+		            "fat": totalFat,
+		            "protein": totalProtein
+		        }
+		     };
+	     	res.send(specs);
+		});
 	});
-
-
-	
-	
 });
 //a
 app.listen(process.env.PORT || 7002);
