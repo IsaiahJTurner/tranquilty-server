@@ -131,7 +131,7 @@ function isKeyword(word) {
 }
 
 //Food api file from Paul from here on, separate later
-\
+
 var id = "";
 var category = "";
 var type = "";
