@@ -167,7 +167,12 @@ app.get('/data', function(req, res) {
 				if (item.protein != "0" && item.protein != null)
 					totalProtein += parseInt(item.protein.substr(0,item.protein.length - 1))
 			})
-				//foods[j]
+			
+			if (totalCarbs == NaN) totalCarbs = 0;
+			if (totalSugar == NaN) totalSugar = 0;
+			if (totalFiber == NaN) totalFiber = 0;
+			if (totalFat == NaN) totalFat = 0;
+			if (totalProtein == NaN) totalProtein = 0;
 			console.log(foods);
 			console.log(totalCarbs);
 			console.log(totalSugar);
@@ -199,7 +204,7 @@ console.log('Express server listening on port ' + app.get('port'));
 
 var apiId = "48bb4311";
 var apiKey = "7f49df0097a6aead808d9c25e0dd3544";
-var keywords = "ate had drank and with I i an a for lunch dinner breakfast at in on";
+var keywords = "ate had drank and with I i an a for lunch dinner breakfast at in on just";
 var foodItem = "";
 
 function parse(sms, id, date) {
@@ -322,16 +327,16 @@ function callback2(error, response, body) {
             "food" : {
                 "name" : innerName,
                 "id" : id,
-                "calories" : calories,
+                "calories" : Math.floor(calories),
                 "icon" : icon,
                 "date" : new Date(dateDB)
             },
             "nutrition" : {
-            	"carbs" : carbs,
-            	"sugar" : sugar,
-            	"fiber" : fiber,
-            	"fat" : fat,
-            	"protein" : protein
+            	"carbs" : Math.floor(carbs),
+            	"sugar" : Math.floor(sugar),
+            	"fiber" : Math.floor(fiber),
+            	"fat" : Math.floor(fat),
+            	"protein" : Math.floor(protein)
             }
         };
 
