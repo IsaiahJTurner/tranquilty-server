@@ -3,6 +3,7 @@ var crypto = require('crypto');
 var request = require('request');
 var bodyParser = require('body-parser');
 var router = express.Router();
+var _ = require('underscore');
 var accountSid = 'ACd882ca7c1db91ca067d5072ac3f0a5b8';
 var authToken = 'c64507802fc8ffd839ca321db09a827b';
 
@@ -28,7 +29,12 @@ var mealSchema = mongoose.Schema({
 	  	date: String,
 	  	food: String,
 	  	group: String,
-	  	specs: String
+	  	specs: Object,
+	  	carbs: String,
+        sugar: String,
+        fiber: String,
+        fat: String,
+        protein: String
 	})
 var User = mongoose.model('user', usersSchema);
 var Meal = mongoose.model('meal', mealSchema);
@@ -85,16 +91,76 @@ app.get('/meal', function(req, res) {
 	
 });
 
+
+function addPercent (n1, n2) {
+	var first = "";
+	var second = "";
+		for (i = 0; i < n1.length - 1; i ++) {
+				first = first + n1[i];
+		}
+		for (i = 0; i < n2.length - 1; i ++) {
+				second = second + n2[i];
+		}
+		// second = 
+		console.log(parseInt(first) + parseInt(second));
+		return parseInt(first) + parseInt(second);
+}
+
 app.get('/data', function(req, res) {
 	var id = req.param("id")
-	Meal.find({ id: id }, function(err, meal) {
-	  if (err) {
-	  	res.json({success: false})
-	  	return console.error(err);
-	  }
-	  console.dir(meal);
-	  res.send(meal);
+	Meal.find({ id: id }, function(err, meals) {
+		if (err) {
+		  	res.json({success: false})
+		  	return console.error(err);
+		}
+		var totalCarbs = 0;
+		var totalSugar = 0;
+		var totalFiber = 0;
+		var totalFat = 0;
+		var totalProtein = 0;
+		var foods = [];
+		//var obj = JSON.parse(meal);
+		_.each(meals, function(item) {
+			foods.push(item.specs);
+			if (item.carbs != null)
+				totalCarbs += parseInt(item.carbs.substr(0,item.carbs.length - 1))
+			if (item.sugar != null)
+				totalSugar += parseInt(item.sugar.substr(0,item.sugar.length - 1))
+			if (item.fiber != null)
+				totalFiber += parseInt(item.fiber.substr(0,item.fiber.length - 1))
+			if (item.fat != null)
+				totalFat += parseInt(item.fat.substr(0,item.fat.length - 1))
+			if (item.protein != null)
+				totalProtein += parseInt(item.protein.substr(0,item.protein.length - 1))
+		})
+			//foods[j]
+		console.log(foods);
+		console.log(totalCarbs);
+		console.log(totalSugar);
+		console.log(totalFiber);
+		console.log(totalFat);
+		console.log(totalProtein);
+			
+
+		var specs = {
+	        "meals" : foods,
+	        "chart" : {
+	            "carbs": totalCarbs,
+	            "sugar": totalSugar,
+	            "fiber": totalFiber,
+	            "fat": totalFat,
+	            "protein": totalProtein
+	        }
+	     };
+	     res.send(specs);
+	  //console.dir(meal);
+	  
+
+
 	});
+
+
+	
 	
 });
 //a
@@ -183,18 +249,23 @@ function callback2(error, response, body) {
         for (i = 0; i < nutritional_facts.length; i++) {
             if (info['nutritional_facts'][i]['nutrient']['common_name'] == "Calories") {
                 calories = info['nutritional_facts'][i]['nutritional_value'];
+                if (calories == null) calories = 0;
             }
             if (info['nutritional_facts'][i]['nutrient']['common_name'] == "Carbohydrate") {
                 carbs = info['nutritional_facts'][i]['daily_value_rounded'];
+                if (carbs == null) carbs = 0;
             }
             if (info['nutritional_facts'][i]['nutrient']['common_name'] == "Sugar") {
                 sugar = info['nutritional_facts'][i]['daily_value_rounded'];
+                if (sugar == null) sugar = 0;
             }
             if (info['nutritional_facts'][i]['nutrient']['common_name'] == "Fiber") {
                 fiber = info['nutritional_facts'][i]['daily_value_rounded'];
+                if (fiber == null) fiber = 0;
             }
             if (info['nutritional_facts'][i]['nutrient']['common_name'] == "Total Fat") {
                 fat = info['nutritional_facts'][i]['daily_value_rounded'];
+                if (fat == null) fat = 0;
             }
             if (info['nutritional_facts'][i]['nutrient']['common_name'] == "Protein") {
                 protein = info['nutritional_facts'][i]['daily_value_rounded'];
@@ -215,17 +286,12 @@ function callback2(error, response, body) {
                 "id" : id,
                 "calories" : calories,
                 "icon" : icon
-            },
-            "chart" : {
-                "carbs": carbs,
-                "sugar": sugar,
-                "fiber": fiber,
-                "fat": fat,
-                "protein": protein
             }
         };
+
         console.log(info)
-        var meal = new Meal({id: hashDB, date: dateDB, food: innerName, specs: JSON.stringify(specs)});
+        var meal = new Meal({id: hashDB, date: dateDB, food: innerName, specs: specs, carbs: carbs,
+         sugar: sugar, fiber: fiber, fat: fat, protein: protein});
 		console.log(meal)
 		console.log(specs)
 		meal.save(function (err, user) {
