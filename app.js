@@ -26,7 +26,6 @@ var usersSchema = mongoose.Schema({
 	})
 var mealSchema = mongoose.Schema({
 	  	id: String,
-	  	date: Date,
 	  	food: String,
 	  	group: String,
 	  	specs: Object,
