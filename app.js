@@ -175,7 +175,6 @@ function urlId(id) {
 
 function callback2(error, response, body) {
     if (!error && response.statusCode == 200) {
-    	var innerName = name;
         var info = JSON.parse(body);
         var icon = "";
         console.log("INFO2: " + info);
@@ -201,6 +200,7 @@ function callback2(error, response, body) {
                 protein = info['nutritional_facts'][i]['daily_value_rounded'];
             }
         }
+        var innerName = info['name'];
         // type = info['nutritional_facts'][0]['nutritional_value'];
         // console.log(name + " " + id + " " + calories + " " + carbs + " " + sugar + " " + fiber + " " + fat + " " + protein);
         
