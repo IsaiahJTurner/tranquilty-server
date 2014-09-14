@@ -107,7 +107,7 @@ console.log('Express server listening on port ' + app.get('port'));
 
 var apiId = "48bb4311";
 var apiKey = "7f49df0097a6aead808d9c25e0dd3544";
-var ignore = "ate had drank and with I i an a for lunch dinner breakfast at in on";
+var keywords = "ate had drank and with I i an a for lunch dinner breakfast at in on";
 var foodItem = "";
 
 function parse(sms, id, date) {
