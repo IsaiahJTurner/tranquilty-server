@@ -164,7 +164,6 @@ function callback(error, response, body) {
         id = info['edibles'][0]['id'];
         console.log(id);
         // type = info['edibles'][0]['description'];
-        options2.url = urlId(id);
         request({
 			    url: urlId(id),
 			    hash: body.hash,
