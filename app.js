@@ -292,7 +292,8 @@ function callback2(error, response, body) {
                 "name" : innerName,
                 "id" : id,
                 "calories" : calories,
-                "icon" : icon
+                "icon" : icon,
+                "date" : new Date(dateDB)
             },
             "nutrition" : {
             	"carbs" : carbs,
@@ -304,7 +305,7 @@ function callback2(error, response, body) {
         };
 
         console.log(info)
-        var meal = new Meal({id: hashDB, date: dateDB, food: innerName, specs: specs, carbs: carbs,
+        var meal = new Meal({id: hashDB, food: innerName, specs: specs, carbs: carbs,
          sugar: sugar, fiber: fiber, fat: fat, protein: protein});
 		console.log(meal)
 		console.log(specs)
