@@ -224,7 +224,7 @@ function callback2(error, response, body) {
             }
         };
         console.log(info)
-        var meal = new Meal({id: hashDB, date: dateDB, food: innerName, specs: specs});
+        var meal = new Meal({id: hashDB, date: dateDB, food: innerName, specs: JSON.stringify(specs)});
 		console.log(meal)
 		console.log(specs)
 		meal.save(function (err, user) {
