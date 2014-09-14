@@ -156,10 +156,15 @@ app.get('/data', function(req, res) {
 			_.each(meals, function(item) {
 				foods.push(item.specs);
 				totalCarbs += parseInt(item.carbs);
+				while (totalCarbs > 100) totalCarbs -= 100;
 				totalSugar += parseInt(item.sugar);
+				while (totalSugar > 100) totalSugar -= 100;
 				totalFiber += parseInt(item.fiber);
+				while (totalFiber > 100) totalFiber -= 100;
 				totalFat += parseInt(item.fat);
+				while (totalFat > 100) totalFat -= 100;
 				totalProtein += parseInt(item.protein);
+				while (totalProtein > 100) totalProtein -= 100;
 			})
 			
 			if (totalCarbs === NaN || totalCarbs === null) totalCarbs = 0;
