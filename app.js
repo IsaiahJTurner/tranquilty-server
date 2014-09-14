@@ -27,6 +27,7 @@ var usersSchema = mongoose.Schema({
 var mealSchema = mongoose.Schema({
 	  	id: String,
 	  	food: String,
+	  	date: Date,
 	  	group: String,
 	  	specs: Object,
 	  	carbs: String,
@@ -114,13 +115,32 @@ function addPercent (n1, n2) {
 var querryPhone = "";
 app.get('/data', function(req, res) {
 	var hash = req.param("id")
+	var parsedDate = req.param("date")
+	console.log(parsedDate);
+	var d = new Date();
+	var day = d.getDate();
+	var month = d.getMonth() + 1;
+	var year = d.getFullYear();
+	if (parsedDate == "m") {
+		month -= 1;
+	}
+	else if (parsedDate == "w") {
+		day -= 7;
+	}
+	else if (parsedDate === undefined) {
+		year -= 10;
+	}	
+	console.log(month);
+	console.log(day);
 	User.findOne({ id: hash }, function(err, user) {
 		if (err) {
 		  	res.json({success: false})
 		  	return console.error(err);
 		}
+		console.log(user);
+		console.log(user.phone);
 		querryPhone = user.phone;
-		Meal.find({ id: querryPhone }, function(err, meals) {
+		Meal.find({ id: querryPhone, date: { $lt: new Date(), $gte: new Date(year+','+month+','+day) }}, function(err, meals) {
 			if (err) {
 			  	res.json({success: false})
 			  	return console.error(err);
@@ -249,7 +269,7 @@ function callback2(error, response, body) {
     if (!error && response.statusCode == 200) {
         var info = JSON.parse(body);
         var icon = "";
-        console.log("INFO2: " + info);
+        dateDB = new Date();
         // category = info['nutritional_facts'][0]['nutrient']['common_name'];
         nutritional_facts = info['nutritional_facts'];
         for (i = 0; i < nutritional_facts.length; i++) {
@@ -304,7 +324,7 @@ function callback2(error, response, body) {
         };
 
         console.log(info)
-        var meal = new Meal({id: hashDB, food: innerName, specs: specs, carbs: carbs,
+        var meal = new Meal({id: hashDB, date: dateDB, food: innerName, specs: specs, carbs: carbs,
          sugar: sugar, fiber: fiber, fat: fat, protein: protein});
 		console.log(meal)
 		console.log(specs)
