@@ -227,7 +227,7 @@ function callback2(error, response, body) {
                 "protein": protein
             }
         };
-
+        console.log(info)
         var meal = new Meal({id: info.hash, date: info.date, food: name, specs: specs});
 		console.log(meal)
 		console.log(specs)
