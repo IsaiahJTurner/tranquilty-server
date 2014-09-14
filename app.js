@@ -119,18 +119,20 @@ app.get('/data', function(req, res) {
 		var totalFat = 0;
 		var totalProtein = 0;
 		var foods = [];
+		console.log(totalSugar)
 		//var obj = JSON.parse(meal);
 		_.each(meals, function(item) {
 			foods.push(item.specs);
-			if (item.carbs != null)
+			if (item.carbs != "0" && item.carbs != null)
 				totalCarbs += parseInt(item.carbs.substr(0,item.carbs.length - 1))
-			if (item.sugar != null)
+			if (item.sugar != "0" && item.sugar != null)
 				totalSugar += parseInt(item.sugar.substr(0,item.sugar.length - 1))
-			if (item.fiber != null)
+			console.log(totalSugar)
+			if (item.fiber != "0" && item.fiber != null)
 				totalFiber += parseInt(item.fiber.substr(0,item.fiber.length - 1))
-			if (item.fat != null)
+			if (item.fat != "0" && item.fat != null)
 				totalFat += parseInt(item.fat.substr(0,item.fat.length - 1))
-			if (item.protein != null)
+			if (item.protein != "0" && item.protein != null)
 				totalProtein += parseInt(item.protein.substr(0,item.protein.length - 1))
 		})
 			//foods[j]
@@ -286,6 +288,13 @@ function callback2(error, response, body) {
                 "id" : id,
                 "calories" : calories,
                 "icon" : icon
+            },
+            "nutrition" : {
+            	"carbs" : carbs,
+            	"sugar" : sugar,
+            	"fiber" : fiber,
+            	"fat" : fat,
+            	"protein" : protein
             }
         };
 
