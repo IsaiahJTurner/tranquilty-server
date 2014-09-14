@@ -155,24 +155,18 @@ app.get('/data', function(req, res) {
 			//var obj = JSON.parse(meal);
 			_.each(meals, function(item) {
 				foods.push(item.specs);
-				if (item.carbs != "0" && item.carbs != null)
-					totalCarbs += parseInt(item.carbs.substr(0,item.carbs.length - 1))
-				if (item.sugar != "0" && item.sugar != null)
-					totalSugar += parseInt(item.sugar.substr(0,item.sugar.length - 1))
-				console.log(totalSugar)
-				if (item.fiber != "0" && item.fiber != null)
-					totalFiber += parseInt(item.fiber.substr(0,item.fiber.length - 1))
-				if (item.fat != "0" && item.fat != null)
-					totalFat += parseInt(item.fat.substr(0,item.fat.length - 1))
-				if (item.protein != "0" && item.protein != null)
-					totalProtein += parseInt(item.protein.substr(0,item.protein.length - 1))
+				totalCarbs += parseInt(item.carbs);
+				totalSugar += parseInt(item.sugar);
+				totalFiber += parseInt(item.fiber);
+				totalFat += parseInt(item.fat);
+				totalProtein += parseInt(item.protein);
 			})
 			
-			if (totalCarbs == NaN) totalCarbs = 0;
-			if (totalSugar == NaN) totalSugar = 0;
-			if (totalFiber == NaN) totalFiber = 0;
-			if (totalFat == NaN) totalFat = 0;
-			if (totalProtein == NaN) totalProtein = 0;
+			if (totalCarbs === NaN || totalCarbs === null) totalCarbs = 0;
+			if (totalSugar === NaN || totalSugar === null) totalSugar = 0;
+			if (totalFiber === NaN || totalFiber === null) totalFiber = 0;
+			if (totalFat === NaN || totalFat === null) totalFat = 0;
+			if (totalProtein === NaN || totalProtein === null) totalProtein = 0;
 			console.log(foods);
 			console.log(totalCarbs);
 			console.log(totalSugar);
